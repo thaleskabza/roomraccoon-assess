@@ -52,6 +52,12 @@ public void addItemToCarT(List<String> ItemNames){
     }
 
 }
+
+// Nav to HomePage
+
+public void openHomePage(){
+    driver.get("https://www.demoblaze.com/");
+}
 // Nav to Cart 
 
 public void navigateToCart(){

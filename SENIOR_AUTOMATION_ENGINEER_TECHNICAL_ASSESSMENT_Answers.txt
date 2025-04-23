@@ -1,0 +1,91 @@
+SENIOR AUTOMATION ENGINEER TECHNICAL ASSESSMENT
+
+Part 1 Bug report :
+Question 1) 1. Based on the business requirement below please provide 3 test case examples that you will use
+during yourtesting.
+Userstory:
+As a hotel manager, I need to ensure thatroom availability updates are accurately reflected in the
+booking system to avoid overbooking.
+Business Requirement
+When a room is booked, the system should automatically update the room's availability status to
+"Occupied". If a booking is cancelled, the status should revert to "Available".
+
+Answer Question 1 :
+1) Verify that Booking a Room sets status to occupied when or once Room 
+has been booked and Checked in for the specific Dates
+Expected : Room status to be set to Occupied
+Pre-condition : A Room has been booked anc check in 
+
+
+2) Verify that when a Client cancels a booking that the satus is set to cancelled the status should revert to "Available".
+Expected : Room status set to Canceled once cancellation has been made and the status should revert to "Available".
+Pre-condition : A Room hass been booked and Client Cancels booking 
+
+3) Verify that when a clients cancels a day earlier for a stay on days plus one that room will be cancelled and the status should revert to "Available". for the spefic day of availability 
+Expected :Room status set to Canceled once cancellation has been made and the status should revert to "Available".
+Pre-condition : A Room that was booked of more than two days  and the client leaves earlier  - this is to make sure that booking is not entirely Canceled
+
+
+2) Bug Report :
+Format of Bug report 
+Title of Bug:
+Servirity :
+Priority :
+Environment where Bug was found:
+Detailed Description using : Before , During and After titles
+Steps to reproduction : in numbered Steps
+Screen shots and Video : Attachments
+
+
+
+Part 2 - General Knowledge
+1. Which of the following is not a type of non-functional testing?
+Answers:
+
+c. Unit Testing
+
+
+2. Whatis the main purpose of regression testing?
+Answers:
+b. To ensure existing functionality is not broken by new changes
+
+3. Which ofthe following is a type of white-box testing?
+
+c. Unit Testing
+
+
+4. Whatis the primary goal of acceptance testing?
+b. To ensure the system meets business requirements
+
+
+
+
+Part Three SQL 
+
+Context:
+You have three tables: employees, departments, and projects. The employees table has columns
+employee_id (integer), employee_name (varchar), and department_id (integer). The departments table has
+columns department_id (integer) and department_name (varchar). The projects table has columns
+project_id (integer), project_name (varchar), and department_id (integer).
+Question:
+Write a SQL query to retrieve the names of employees along with the names of their departments and the
+names of the projects they are working on. Additionally, include a count of how many employees are
+working on each project.
+
+Answer: 
+We are retrieving the employee name , departmengt name and Projectname  and Counting the number of employee found in each Project by linking 
+department ID from department and employee tables  and futher linking department ID from projects and department table then we order by the name of proje
+SELECT 
+e.employee_name,
+d.department_name,
+p.project_name
+COUNT(e.employee_id) (PARTITION BY p.project_id ) AS CountofEmpleyes
+FROM employees AS e
+JOIN departments AS d
+ON e.department_id = d.department_id
+JOIN projects AS p
+ON p.department_id = d.department_id
+ORDER BY p.project_name,e.employee_name,
+
+
+
