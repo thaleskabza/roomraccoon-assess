@@ -1,0 +1,103 @@
+Find Table element to verify that cart is not empty 
+
+To verify the price we will iterate TableHeader <th>Price</th> to each <td>650</td> then sum up the array of //table[@class=""table table-bordered table-hover table-striped"]/thead/tr/th[has-text: Price]/td[constains[$value]]
+array = value 
+sum = array[[array.length] - 1] this is use the array length then use teh value an index
+
+<table class="table table-bordered table-hover table-striped">
+  <thead>
+    <tr>
+      <th width="120">Pic</th>
+      <th>Title</th>
+      <th>Price</th>
+      <th>x</th>
+    </tr>
+  </thead>
+  <tbody id="tbodyid">
+    <tr class="success">
+      <td><img width="100" height="100" src="imgs/Nexus_6.jpg"></td>
+      <td>Nexus 6</td>
+      <td>650</td>
+      <td><a href="#" onclick="deleteItem('e1f355dc-6f8b-ef32-bfe4-ce93f5033ef7')">Delete</a></td>
+    </tr>
+    <tr class="success">
+      <td><img width="100" height="100" src="imgs/Lumia_1520.jpg"></td>
+      <td>Nokia lumia 1520</td>
+      <td>820</td>
+      <td><a href="#" onclick="deleteItem('8a830bea-1e9e-b932-98b7-c2b52d47ee01')">Delete</a></td>
+    </tr>
+    <tr class="success">
+      <td><img width="100" height="100" src="imgs/galaxy_s6.jpg"></td>
+      <td>Samsung galaxy s6</td>
+      <td>360</td>
+      <td><a href="#" onclick="deleteItem('1f1d4df8-111c-3344-d69d-b1e2a817764c')">Delete</a></td>
+    </tr>
+    <tr class="success">
+      <td><img width="100" height="100" src="imgs/Nexus_6.jpg"></td>
+      <td>Nexus 6</td>
+      <td>650</td>
+      <td><a href="#" onclick="deleteItem('8aef3272-63f7-04f4-4f6a-03aaab148898')">Delete</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+Task: Write feature tests to:
+Add multiple items to the cart.
+Verify the total price calculation.
+Complete the purchase process.
+Validate the order confirmation message.
+
+
+
+test('test', async ({ page }) => {
+  await page.goto('https://www.demoblaze.com/');
+  await page.locator('.card > a').first().click();
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  await page.getByRole('link', { name: 'Add to cart' }).click();
+  await page.getByRole('link', { name: 'Home (current)' }).click();
+  await page.locator('div:nth-child(2) > .card > a').click();
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  await page.getByRole('link', { name: 'Add to cart' }).click();
+  await page.getByRole('link', { name: 'Home (current)' }).click();
+  await page.getByRole('link', { name: 'Nexus' }).click();
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  await page.getByRole('link', { name: 'Add to cart' }).click();
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  await page.getByRole('link', { name: 'Add to cart' }).click();
+  await page.getByRole('link', { name: 'Home (current)' }).click();
+  await page.getByRole('link', { name: 'Cart' }).click();
+  await page.locator('div').filter({ hasText: 'Products Pic Title Price x' }).nth(1).click({
+    button: 'right'
+  });
+  await expect(page.locator('#totalp')).toMatchAriaSnapshot(`- heading /\\d+/ [level=3]`);
+  await page.getByRole('link', { name: 'Cart' }).click();
+  await page.getByRole('button', { name: 'Place Order' }).click();
+  await page.getByRole('textbox', { name: 'Total: 2480 Name:' }).click();
+  await page.getByRole('textbox', { name: 'Total: 2480 Name:' }).fill('Kabelo');
+  await page.getByRole('textbox', { name: 'Total: 2480 Name:' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Country:' }).fill('South Africa');
+  await page.getByRole('textbox', { name: 'Country:' }).press('Tab');
+  await page.getByRole('textbox', { name: 'City:' }).fill('cape Town');
+  await page.getByRole('textbox', { name: 'Credit card:' }).click();
+  await page.getByRole('textbox', { name: 'Credit card:' }).click();
+  await page.getByRole('textbox', { name: 'Month:' }).click();
+  await page.getByRole('textbox', { name: 'Month:' }).fill('12');
+  await page.getByRole('textbox', { name: 'Year:' }).click();
+  await page.getByRole('textbox', { name: 'Year:' }).fill('2029');
+  await page.getByRole('button', { name: 'Purchase' }).click();
+  await expect(page.locator('body')).toContainText('Id: 3503421Amount: 2480 USDCard Number: 5536 3091 6673 7061Name: KabeloDate: 23/3/2025');
+  await expect(page.locator('body')).toContainText('Thank you for your purchase!');
+});
