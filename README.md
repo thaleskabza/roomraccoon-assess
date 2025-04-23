@@ -4,3 +4,13 @@ RoomRaccoon makes use ofregression testing using Java, TestNG, and Selenium WebD
 
 # Building Application 
 docker compose -f docker-compose.yml up -d --build 
+
+
+# Run Test 
+
+docker compose run --rm test-runner mvn test   
+
+
+# Remove all
+
+ docker compose down -v 

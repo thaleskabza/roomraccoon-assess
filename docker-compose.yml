@@ -79,7 +79,7 @@ services:
     networks:
       - mynetwork
     environment:
-      SELENIUM_HUB_URL: "http://selenium-hub-B:4444/wd/hub"
+      SELENIUM_HUB_URL: "http://selenium-hub:4444/wd/hub"
       DB_URL: "jdbc:mysql://mysql:3306/testdb"
       DB_USER: "testuser"
       DB_PASSWORD: "testpwd"
