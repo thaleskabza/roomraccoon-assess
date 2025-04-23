@@ -74,7 +74,7 @@ working on each project.
 
 Answer: 
 We are retrieving the employee name , departmengt name and Projectname  and Counting the number of employee found in each Project by linking 
-department ID from department and employee tables  and futher linking department ID from projects and department table then we order by the name of proje
+department ID from department and employee tables  and futher linking department ID from projects and department table then we order by the name of project and Employees
 SELECT 
 e.employee_name,
 d.department_name,

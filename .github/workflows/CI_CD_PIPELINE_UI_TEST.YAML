@@ -1,0 +1,73 @@
+name: Dockerized Test Execution
+
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  push:
+    branches: [ main, master, dev, feature ]
+  pull_request:
+    branches: [ main, master, dev, feature ]
+
+jobs:
+  docker-compose-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.1.0
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Start containers with Docker Compose
+        run: |
+          docker compose -f docker-compose.yml up -d --build
+          docker compose ps
+
+
+
+      - name: Run tests in Docker container
+        run: |
+          docker compose run --rm test-runner mvn test
+
+      - name: Capture logs on failure
+        if: failure()
+        run: |
+          docker compose logs selenium-hub > selenium-hub.log
+          docker compose logs chrome > chrome.log
+          docker compose logs firefox > firefox.log
+          docker compose logs mysql > mysql.log
+          docker compose logs test-runner > test-runner.log
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: |
+            target/cucumber-reports/
+            target/surefire-reports/
+            test-output/
+
+      - name: Upload service logs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: service-logs
+          path: |
+            selenium-hub.log
+            chrome.log
+            firefox.log
+            mysql.log
+            test-runner.log
+
+      - name: Stop and remove containers
+        if: always()
+        run: docker compose down -v

@@ -1,17 +1,19 @@
-# maven image 
-FROM MAVEN:3.8.4-JDK-1
+# Use the official Maven image with JDK 11 as the base image
+FROM maven:3.8.4-jdk-11
 
-# creating a woking directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# copy dependencies 
+# Copy the pom.xml first so Maven can download dependencies
 COPY pom.xml .
 
-# Copy the whole directory which holds the code: src/
+# Copy the source code
 COPY src ./src
 
-RUN  mvn clean package -DskipTests
+# Build the project and package the application,
+# skipping tests at build time for faster image creation.
+RUN mvn clean package -DskipTests
 
-
-# Default maven test command
-CMD ["mvn", " test"]
+# The default command, which can be customized.
+# Here we run the tests, but you could also run your built application.
+CMD ["mvn", "test"]
