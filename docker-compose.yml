@@ -12,7 +12,7 @@ services:
       timeout: 5s
       retries: 5
 
-  chrome:
+  chrome-1:
     image: selenium/node-chrome:4.8.0
     depends_on:
       selenium-hub:
@@ -23,7 +23,7 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_MAX_SESSIONS=2
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
       - SE_VNC_NO_PASSWORD=1
@@ -38,7 +38,41 @@ services:
           cpus: '1'
           memory: 2G
 
-  firefox:
+  chrome-2:
+    image: selenium/node-chrome:4.8.0
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    networks:
+      - mynetwork
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: '2gb'
+    volumes:
+      - /dev/shm:/dev/shm
+
+  firefox-1:
+    image: selenium/node-firefox:4.8.0
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    networks:
+      - mynetwork
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    shm_size: '2gb'
+
+  firefox-2:
     image: selenium/node-firefox:4.8.0
     depends_on:
       selenium-hub:
